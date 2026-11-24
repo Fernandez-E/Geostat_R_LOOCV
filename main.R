@@ -7,7 +7,7 @@ library(sp)
 library(writexl)
 
 dados <- read.csv(
-  "E:/[MV]MIRELLA_VERAS/ESCRITA_ARTIGOS/GEOESTATISTICA/data.csv", # usar o caminho absoluto (pegar no explorador de arquivos)
+  "D:/geoeas/data.csv", # usar o caminho absoluto (pegar no explorador de arquivos)
   header = TRUE,
   sep = ","
 )
@@ -19,15 +19,15 @@ coordinates(dados) <- ~x+y #Alterar os nomes x e y de acordo com o nome de cada 
 variograma <- variogram(
   z ~ 1, # quando não existe tendência
   dados,
-  cutoff = 1700,
-  width = 100
+  cutoff = 12,
+  width = 1.16
 )
 
 modelo <- vgm(
-  psill = 720,
-  model = "Gau", # Sph, Gau ou Exp
-  range = 800,
-  nugget = 15
+  psill = 1.8,
+  model = "Exp", # Sph, Gau ou Exp
+  range = 3, # Caso seja comparado ou utilizado modelos do geoeas, usar aqui o range/3 se exponencial, range/raiz(3) se gaussiano ou range se esférico
+  nugget = 1.2
 )
 
 plot(
@@ -42,7 +42,8 @@ resultado <- krige.cv(
   z ~ 1,
   locations = dados,
   model = modelo,
-  nfold = nrow(dados)
+  nfold = nrow(dados), 
+  maxdist = 23.1
 )
 
 View(as.data.frame(resultado))
@@ -57,4 +58,3 @@ zscore <- data.frame(
 )
 
 print(zscore)
-
