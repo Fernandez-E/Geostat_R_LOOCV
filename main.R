@@ -42,8 +42,7 @@ resultado <- krige.cv(
   z ~ 1,
   locations = dados,
   model = modelo,
-  nfold = nrow(dados), 
-  maxdist = 23.1
+  nfold = nrow(dados)
 )
 
 View(as.data.frame(resultado))
